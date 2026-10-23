@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audio Cable - Auto Discount</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #e9edf2;
+      padding: 20px;
+    }
+    header {
+      background: linear-gradient(135deg, #0b5ed7, #0a4ca0);
+      color: #fff;
+      padding: 18px 24px;
+      border-radius: 12px 12px 0 0;
+      font-size: 26px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header small {
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+    .wrap {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .card {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #0b5ed7;
+      font-size: 18px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 18px;
+    }
+    .grid label {
+      font-weight: 600;
+      font-size: 13px;
+      color: #1e293b;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .grid input, .grid select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      transition: 0.2s;
+    }
+    .grid input:focus, .grid select:focus {
+      border-color: #0b5ed7;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(11,94,215,0.15);
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.15s;
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .btn-primary {
+      background: #0b5ed7;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #094ba8;
+    }
+    .btn-success {
+      background: #16a34a;
+      color: #fff;
+    }
+    .btn-success:hover {
+      background: #15803d;
+    }
+    .btn-danger {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+    .summary .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed #d1d9e6;
+      font-size: 15px;
+    }
+    .summary .row:last-child {
+      border-bottom: none;
+    }
+    .total {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0b5ed7;
+      background: #e6f0ff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 6px;
+    }
+    .total b {
+      font-size: 26px;
+      color: #0b5ed7;
+    }
+    .discount-section {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .discount-section .label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #166534;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .discount-badge {
+      display: inline-block;
+      background: #16a34a;
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .discount-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid #86efac;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .discount-info span {
+      font-weight: 600;
+    }
+    .discount-info .saved {
+      color: #16a34a;
+    }
+    .discount-tier {
+      font-size: 12px;
+      color: #166534;
+      background: #dcfce7;
+      padding: 4px 12px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .settings-grid input {
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 100%;
+    }
+    .settings-grid label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .settings-group {
+      margin-top: 12px;
+    }
+    .settings-group label {
+      font-weight: 600;
+      font-size: 13px;
+      display: block;
+      margin: 6px 0 2px;
+    }
+    .toast {
+      background: #16a34a;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      display: inline-block;
+      animation: fadeOut 2s forwards;
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .tier-info {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 6px 0 2px;
+    }
+    .tier-info .tier {
+      font-size: 11px;
+      background: #e2e8f0;
+      padding: 2px 10px;
+      border-radius: 10px;
+      color: #475569;
+    }
+    .tier-info .tier.active-tier {
+      background: #16a34a;
+      color: #fff;
+      font-weight: 700;
+    }
+    @media (max-width: 800px) {
+      .wrap { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .settings-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media print {
+      body { background: #fff; padding: 10px; }
+      .wrap { box-shadow: none; border: 1px solid #ccc; }
+      .btn, .btn-group { display: none; }
+      header { background: #0b5ed7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .total { background: #e6f0ff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+
+<style id="button-layout-fix">
+/* Keep the main POS action buttons compact and side-by-side */
+.actions,
+.action-buttons,
+.buttons,
+.button-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  align-items:center !important;
+}
+.actions button,
+.action-buttons button,
+.buttons button,
+.button-row button{
+  width:auto !important;
+  flex:0 0 auto !important;
+  min-width:0 !important;
+  white-space:nowrap !important;
+}
+</style>
+
+
+<style>
+#manualDiscount{
+  width:100%;
+  height:14px !important;
+  cursor:pointer;
+  accent-color:#111827;
+}
+#manualDiscount::-webkit-slider-runnable-track{
+  height:10px;
+  border-radius:8px;
+}
+#manualDiscount::-webkit-slider-thumb{
+  width:24px;
+  height:24px;
+  margin-top:-7px;
+  cursor:grab;
+}
+#manualDiscount::-moz-range-track{
+  height:10px;
+  border-radius:8px;
+}
+#manualDiscount::-moz-range-thumb{
+  width:24px;
+  height:24px;
+  cursor:grab;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <span>🎤 Audio Cable</span>
+  <small>Auto Material Discount</small>
+</header>
+
+<div class="wrap">
+  <!-- LEFT: INPUTS -->
+  <div class="card">
+    <div class="grid">
+      <div><label>Customer</label><input id="cust" placeholder="Walk-in / Name" style="cursor:not-allowed;opacity:.75;background:#f3f4f6;" disabled>
+<div id="customer-custom-controls" style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+  <button type="button" id="enableCustomerName"
+          style="width:auto;padding:6px 10px;border:1px solid #bbb;border-radius:6px;background:#fff;cursor:pointer;">
+    Enter Customer Name
+  </button>
+  <span id="customerNameStatus" style="font-size:12px;color:#666;">Auto customer number</span>
+</div>
+</div>
+      <div><label>Date</label><input type="date" id="dt"></div>
+      <div><label>Cable Type</label>
+        <select id="type">
+          <option value="xlrp">XLR F→M (Plastic)</option>
+          <option value="xlrn">XLR F→M (No Plastic)</option>
+          <option value="pls">PL Stereo → PL Stereo (Balanced)</option>
+          <option value="plm">PL Mono → PL Mono</option>
+        </select>
+      </div>
+      <div><label>Length (meters)</label><input id="meters" type="number" value="0" min="0.5" step="0.5"></div>
+      <div><label>Connector Qty A</label><input id="qa" type="number" value="0" min="0"></div>
+      <div><label>Connector Qty B</label><input id="qb" type="number" value="0" min="0"></div>
+      <div><label>Sets (pcs)</label><input id="sets" type="number" value="0" min="0"></div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+      <button class="btn btn-success" onclick="resetToDefault()">↺ Reset Defaults</button>
+<section class="center-calculators" aria-label="Discount and VAT calculators">
+  <div class="mini-calc-card">
+    <h3>💰 Discount Calculator</h3>
+    <p>Type the total price, then slide the discount.</p>
+    <div class="mini-grid">
+      <div><label for="manualTotalPrice">Total Price</label><div class="money-wrap"><span>₱</span><input id="manualTotalPrice" type="number" min="0" step="0.01" placeholder="0.00"></div></div>
+      <div><label for="manualDiscount">Discount <b id="manualDiscountLabel">0%</b></label><input id="manualDiscount" type="range" min="0" max="50" step="1" value="0" style="height:14px; cursor:pointer;"><div class="range-labels"><span>0%</span><span>50%</span></div></div>
+      <div class="calc-result"><span>Discount Amount</span><strong id="manualDiscountAmount">₱0.00</strong></div>
+      <div class="calc-result primary"><span>Discounted Amount</span><strong id="manualDiscountedAmount">₱0.00</strong></div>
+    </div>
+  </div>
+
+  <div class="mini-calc-card vat-calculator-card">
+    <h3>🇵🇭 Philippine VAT Calculator</h3>
+    <p>Quickly calculate value-added tax for Philippine pricing.</p>
+
+    <div class="vat-field">
+      <label for="vatTotalPrice">Amount</label>
+      <div class="money-wrap">
+        <span>₱</span>
+        <input id="vatTotalPrice" type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+    </div>
+
+    <div class="vat-mode" role="radiogroup" aria-label="VAT mode">
+      <label>
+        <input type="radio" name="vatMode" value="inclusive" checked>
+        Includes VAT
+      </label>
+      <label>
+        <input type="radio" name="vatMode" value="exclusive">
+        Excludes VAT
+      </label>
+    </div>
+
+    <div class="vat-field">
+      <label for="vatRate">VAT Rate</label>
+      <select id="vatRate">
+        <option value="12" selected>12 %</option>
+      </select>
+    </div>
+
+    <div class="vat-results">
+      <div class="vat-result">
+        <span>VAT:</span>
+        <strong id="vatAmount">₱0.00</strong>
+      </div>
+      <div class="vat-result">
+        <span>Excl. VAT:</span>
+        <strong id="vatFinalAmount">₱0.00</strong>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+.center-calculators{width:min(980px,calc(100% - 32px));margin:28px auto;display:grid;gap:18px}.mini-calc-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:22px;box-shadow:0 8px 24px rgba(0,0,0,.06)}.mini-calc-card h3{margin:0;font-size:20px;color:#111827}.mini-calc-card p{margin:5px 0 18px;color:#6b7280;font-size:13px}.mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mini-grid label{display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:7px}.money-wrap{display:flex;align-items:center;border:1px solid #d1d5db;border-radius:10px;overflow:hidden;background:#fff}.money-wrap span{padding:10px 11px;background:#f9fafb;color:#6b7280;font-weight:700;border-right:1px solid #e5e7eb}.money-wrap input{width:100%;border:0;outline:0;padding:10px 12px;font-size:16px}.mini-grid input[type=range]{width:100%;accent-color:#111827;margin-top:7px}.range-labels{display:flex;justify-content:space-between;font-size:11px;color:#9ca3af}.calc-result{border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;background:#f9fafb}.calc-result span{display:block;font-size:12px;color:#6b7280;margin-bottom:5px}.calc-result strong{font-size:18px;color:#111827}.calc-result.primary{background:#f3f4f6;border-color:#d1d5db}.vat-mode{display:flex;gap:18px;margin:0 0 16px;font-size:13px;font-weight:700;color:#374151}.vat-mode label{cursor:pointer}@media(max-width:700px){.mini-grid{grid-template-columns:1fr}.center-calculators{width:calc(100% - 20px)}}
+</style>
+
+<style>
+.vat-calculator-card .vat-field{margin-bottom:14px}
+.vat-calculator-card .vat-field>label{display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:7px}
+.vat-calculator-card .vat-mode{display:flex;gap:18px;align-items:center;margin:2px 0 18px;font-size:13px;font-weight:500;color:#374151}
+.vat-calculator-card .vat-mode label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.vat-calculator-card .vat-mode input{margin:0}
+.vat-calculator-card select{width:100%;border:1px solid #d1d5db;border-radius:10px;background:#fff;padding:10px 12px;font-size:16px;color:#111827;outline:0}
+.vat-results{display:grid;gap:10px;margin-top:8px}
+.vat-result{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb}
+.vat-result span{font-size:13px;color:#374151}
+.vat-result strong{font-size:16px;color:#111827}
+</style>
+<script>
+(function(){
+ const money=v=>'₱'+Number(v||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+ const dTotal=document.getElementById('manualTotalPrice'), dRate=document.getElementById('manualDiscount');
+ function discount(){const t=Math.max(0,Number(dTotal.value)||0),r=Number(dRate.value)||0,a=t*r/100;document.getElementById('manualDiscountLabel').textContent=r+'%';document.getElementById('manualDiscountAmount').textContent=money(a);document.getElementById('manualDiscountedAmount').textContent=money(t-a)}
+ function vat(){
+   const a=Math.max(0,Number(document.getElementById('vatTotalPrice').value)||0);
+   const rate=Math.max(0,Number(document.getElementById('vatRate').value)||0)/100;
+   const mode=document.querySelector('input[name=vatMode]:checked').value;
+   let v,net;
+
+   if(mode==='inclusive'){
+     v=a-(a/(1+rate));
+     net=a/(1+rate);
+   }else{
+     v=a*rate;
+     net=a;
+   }
+
+   document.getElementById('vatAmount').textContent=money(v);
+   document.getElementById('vatFinalAmount').textContent=money(net);
+ }
+ dTotal.addEventListener('input',discount);dRate.addEventListener('input',discount);document.getElementById('vatTotalPrice').addEventListener('input',vat);document.getElementById('vatRate').addEventListener('change',vat);document.querySelectorAll('input[name=vatMode]').forEach(x=>x.addEventListener('change',vat));discount();vat();
+})();
+</script>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: SUMMARY + DISCOUNT + SETTINGS -->
+  <div>
+    <div class="card summary">
+      <h3>📋 Summary</h3>
+      <div class="row"><span>Cable Cost</span><b id="rc">₱0.00</b></div>
+      <div class="row"><span>Connector A</span><b id="ra">₱0.00</b></div>
+      <div class="row"><span>Connector B</span><b id="rb">₱0.00</b></div>
+      <div class="row" style="border-bottom:2px solid #d1d9e6;padding-bottom:12px;">
+        <span style="font-weight:700;">Subtotal (Materials)</span>
+        <b id="subtotal" style="font-size:18px;">₱0.00</b>
+      </div>
+      
+      <!-- DISCOUNT SECTION - AUTO -->
+      <div class="discount-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+          <span class="label" style="margin:0;">🏷️ Auto Material Discount</span>
+          <span class="discount-tier" id="tierLabel">No discount</span>
+        </div>
+        
+        <!-- Tier indicators -->
+        <div class="tier-info">
+          <span class="tier" data-tier="0">0%</span>
+          <span class="tier" data-tier="3">3%</span>
+          <span class="tier" data-tier="5">5%</span>
+          <span class="tier" data-tier="8">8%</span>
+          <span class="tier" data-tier="10">10%</span>
+        </div>
+        
+        <div class="discount-info">
+          <span>Discount: <b id="discountLabel">0%</b></span>
+          <span class="saved">You Saved: <b id="savedAmount">₱0.00</b></span>
+        </div>
+      </div>
+
+      <div class="row"><span>Labor</span><b id="rl">₱0.00</b></div>
+      <div class="row total">
+        <span>TOTAL (incl. Labor)</span>
+        <b id="gt">₱0.00</b>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>⚙️ Price Settings</h3>
+      <div class="settings-group">
+        <label>Cable (per meter)</label>
+        <input id="pc" type="number" step="1" value="168">
+      </div>
+
+      <div class="settings-group">
+        <label>XLR Connectors</label>
+        <div class="settings-grid">
+          <div><label>NC3MXX</label><input id="nc3m" type="number" step="1" value="250"></div>
+          <div><label>NC3FXX</label><input id="nc3f" type="number" step="1" value="275"></div>
+          <div><label>NC3MXX‑D</label><input id="nc3md" type="number" step="1" value="230"></div>
+          <div><label>NC3FXX‑D</label><input id="nc3fd" type="number" step="1" value="255"></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <label>PL Connectors</label>
+        <div class="settings-grid">
+          <div><label>NP3X (Stereo)</label><input id="np3x" type="number" step="1" value="360"></div>
+          <div><label>NP2X (Mono)</label><input id="np2x" type="number" step="1" value="240"></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <label>Labor (per set)</label>
+        <input id="labor" type="number" step="1" value="300" style="max-width:140px;">
+      </div>
+
+      <div class="btn-group" style="margin-top:14px;">
+        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+        <span id="saveToast" style="margin-left:10px;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // === Default price data ===
+  const DEFAULTS = {
+    c: 168,
+    nc3m: 250,
+    nc3f: 275,
+    nc3md: 230,
+    nc3fd: 255,
+    np3x: 360,
+    np2x: 240,
+    l: 300
+  };
+
+  // === Discount Brackets ===
+  const DISCOUNT_BRACKETS = [
+    { min: 0, max: 2999, rate: 0 },
+    { min: 3000, max: 7999, rate: 3 },
+    { min: 8000, max: 15999, rate: 5 },
+    { min: 16000, max: 24999, rate: 8 },
+    { min: 25000, max: Infinity, rate: 10 }
+  ];
+
+  // Load from localStorage or use defaults
+  let d = { ...DEFAULTS };
+  try {
+    const saved = JSON.parse(localStorage.getItem('v5'));
+    if (saved && typeof saved === 'object') {
+      for (let key of Object.keys(DEFAULTS)) {
+        if (saved[key] !== undefined && !isNaN(saved[key])) {
+          d[key] = Number(saved[key]);
+        }
+      }
+    }
+  } catch (_) {}
+
+  // === DOM refs ===
+  const $ = id => document.getElementById(id);
+  const fields = ['pc','nc3m','nc3f','nc3md','nc3fd','np3x','np2x','labor'];
+  const inputFields = fields.map(id => $(id));
+
+  // Format currency (PHP)
+  function p(val) {
+    const num = Number(val) || 0;
+    return '₱' + num.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // Get discount rate based on subtotal
+  function getDiscountRate(subtotal) {
+    for (let bracket of DISCOUNT_BRACKETS) {
+      if (subtotal >= bracket.min && subtotal <= bracket.max) {
+        return bracket.rate;
+      }
+    }
+    return 0;
+  }
+
+  // Calculate and update summary
+  function calc() {
+    const meters = parseFloat($('meters').value) || 0;
+    const sets = parseInt($('sets').value) || 1;
+    const qa = parseInt($('qa').value) || 0;
+    const qb = parseInt($('qb').value) || 0;
+    const type = $('type').value;
+
+    // Cable cost
+    const cp = d.c * meters * sets;
+
+    // Connector costs based on type
+    let aPrice = 0, bPrice = 0;
+    switch (type) {
+      case 'xlrp':
+        aPrice = d.nc3m;
+        bPrice = d.nc3f;
+        break;
+      case 'xlrn':
+        aPrice = d.nc3md;
+        bPrice = d.nc3fd;
+        break;
+      case 'pls':
+        aPrice = d.np3x;
+        bPrice = d.np3x;
+        break;
+      case 'plm':
+        aPrice = d.np2x;
+        bPrice = d.np2x;
+        break;
+    }
+    const aTotal = aPrice * qa;
+    const bTotal = bPrice * qb;
+    const materialsTotal = cp + aTotal + bTotal;
+
+    // === AUTO DISCOUNT based on materials subtotal ===
+    const discountRate = getDiscountRate(materialsTotal);
+    const discountMultiplier = 1 - (discountRate / 100);
+    const discountedMaterials = materialsTotal * discountMultiplier;
+    const discountAmount = materialsTotal - discountedMaterials;
+
+    const laborTotal = d.l * sets;
+    const grand = discountedMaterials + laborTotal;
+
+    // Update display
+    $('rc').textContent = p(cp);
+    $('ra').textContent = p(aTotal);
+    $('rb').textContent = p(bTotal);
+    $('subtotal').textContent = p(materialsTotal);
+    $('rl').textContent = p(laborTotal);
+    $('gt').textContent = p(grand);
+
+    // Update discount info
+    if (discountRate > 0) {
+      $('discountLabel').textContent = discountRate + '%';
+      $('savedAmount').textContent = p(discountAmount);
+      $('savedAmount').style.color = '#16a34a';
+      
+      // Tier label
+      let tierText = '';
+      for (let b of DISCOUNT_BRACKETS) {
+        if (b.rate === discountRate) {
+          tierText = b.rate + '% discount';
+          if (b.max === Infinity) {
+            tierText += ' (₱25,000+)';
+          } else {
+            tierText += ' (₱' + b.min.toLocaleString() + ' - ₱' + b.max.toLocaleString() + ')';
+          }
+          break;
+        }
+      }
+      $('tierLabel').textContent = '🏷️ ' + tierText;
+      $('tierLabel').style.background = '#86efac';
+    } else {
+      $('discountLabel').textContent = '0%';
+      $('savedAmount').textContent = '₱0.00';
+      $('savedAmount').style.color = '#64748b';
+      $('tierLabel').textContent = 'No discount applied';
+      $('tierLabel').style.background = '#e2e8f0';
+    }
+
+    // Update tier indicators
+    document.querySelectorAll('.tier-info .tier').forEach(el => {
+      const tierRate = parseInt(el.dataset.tier);
+      if (tierRate === discountRate && discountRate > 0) {
+        el.classList.add('active-tier');
+      } else {
+        el.classList.remove('active-tier');
+      }
+    });
+  }
+
+  // Populate settings fields from `d` and run calc
+  function populateSettings() {
+    fields.forEach(id => {
+      const key = id === 'labor' ? 'l' : id;
+      if (d[key] !== undefined) {
+        $(id).value = d[key];
+      }
+    });
+    calc();
+  }
+
+  // Save settings from UI to `d` and localStorage
+  function saveSettings() {
+    const newData = {};
+    fields.forEach(id => {
+      const key = id === 'labor' ? 'l' : id;
+      const val = parseFloat($(id).value);
+      if (!isNaN(val) && val >= 0) {
+        newData[key] = val;
+      } else {
+        newData[key] = DEFAULTS[key] || 0;
+        $(id).value = newData[key];
+      }
+    });
+    for (let key of Object.keys(DEFAULTS)) {
+      if (newData[key] === undefined) newData[key] = DEFAULTS[key];
+    }
+    d = newData;
+    localStorage.setItem('v5', JSON.stringify(d));
+
+    const toast = $('saveToast');
+    toast.textContent = '✅ Saved!';
+    toast.className = 'toast';
+    setTimeout(() => { toast.textContent = ''; toast.className = ''; }, 2000);
+
+    calc();
+  }
+
+  // Reset to factory defaults
+  function resetToDefault() {
+    d = { ...DEFAULTS };
+    localStorage.setItem('v5', JSON.stringify(d));
+    populateSettings();
+    const toast = $('saveToast');
+    toast.textContent = '↺ Reset to defaults';
+    toast.className = 'toast';
+    setTimeout(() => { toast.textContent = ''; toast.className = ''; }, 2000);
+  }
+
+  // === Event listeners ===
+  const calcTriggers = ['meters','qa','qb','sets','type'].map(id => $(id));
+  calcTriggers.forEach(el => {
+    if (el) el.addEventListener('input', calc);
+  });
+  inputFields.forEach(el => {
+    if (el) el.addEventListener('input', calc);
+  });
+
+  // Auto-generate Walk-in customer number (CUS-0001, CUS-0002, ...).
+  // The sequence is stored locally so it continues across page refreshes.
+  function generateWalkInCustomer() {
+    const key = 'audioCablePOS_customerSeq';
+    let seq = parseInt(localStorage.getItem(key) || '0', 10);
+    if (isNaN(seq) || seq < 0) seq = 0;
+    seq += 1;
+    localStorage.setItem(key, String(seq));
+    const customerId = 'CUS-' + String(seq).padStart(4, '0');
+    if ($('cust')) $('cust').value = customerId;
+  }
+
+  // Set default date
+  if ($('dt')) {
+    const now = new Date().toISOString().split('T')[0];
+    $('dt').value = now;
+  }
+
+  // Init
+  generateWalkInCustomer();
+  populateSettings();
+
+  // Expose functions for inline buttons
+  window.saveSettings = saveSettings;
+  window.resetToDefault = resetToDefault;
+</script>
+
+
+<!-- Centered Manual Discount + Philippine VAT Calculators -->
+
+
+
+
+
+<script>
+(function(){
+  const generatedNames = ['Audio Craft', 'Audio Link', 'Audio Works', 'Audio Lab', 'Audio Hub', 'Audio Forge', 'Audio Bench', 'Audio Line', 'Audio Core', 'Audio Pro', 'Audio Studio', 'Audio Stage', 'Audio Wave', 'Audio Wire', 'Audio Cable', 'Audio Signal', 'Audio Tone', 'Audio Mix', 'Audio Connect', 'Audio Audio', 'Sound Craft', 'Sound Link', 'Sound Works', 'Sound Lab', 'Sound Hub', 'Sound Forge', 'Sound Bench', 'Sound Line', 'Sound Core', 'Sound Pro', 'Sound Studio', 'Sound Stage', 'Sound Wave', 'Sound Wire', 'Sound Cable', 'Sound Signal', 'Sound Tone', 'Sound Mix', 'Sound Connect', 'Sound Audio', 'Cable Craft', 'Cable Link', 'Cable Works', 'Cable Lab', 'Cable Hub', 'Cable Forge', 'Cable Bench', 'Cable Line', 'Cable Core', 'Cable Pro', 'Cable Studio', 'Cable Stage', 'Cable Wave', 'Cable Wire', 'Cable Cable', 'Cable Signal', 'Cable Tone', 'Cable Mix', 'Cable Connect', 'Cable Audio', 'Wire Craft', 'Wire Link', 'Wire Works', 'Wire Lab', 'Wire Hub', 'Wire Forge', 'Wire Bench', 'Wire Line', 'Wire Core', 'Wire Pro', 'Wire Studio', 'Wire Stage', 'Wire Wave', 'Wire Wire', 'Wire Cable', 'Wire Signal', 'Wire Tone', 'Wire Mix', 'Wire Connect', 'Wire Audio', 'Pro Craft', 'Pro Link', 'Pro Works', 'Pro Lab', 'Pro Hub', 'Pro Forge', 'Pro Bench', 'Pro Line', 'Pro Core', 'Pro Pro', 'Pro Studio', 'Pro Stage', 'Pro Wave', 'Pro Wire', 'Pro Cable', 'Pro Signal', 'Pro Tone', 'Pro Mix', 'Pro Connect', 'Pro Audio', 'Studio Craft', 'Studio Link', 'Studio Works', 'Studio Lab', 'Studio Hub', 'Studio Forge', 'Studio Bench', 'Studio Line', 'Studio Core', 'Studio Pro', 'Studio Studio', 'Studio Stage', 'Studio Wave', 'Studio Wire', 'Studio Cable', 'Studio Signal', 'Studio Tone', 'Studio Mix', 'Studio Connect', 'Studio Audio', 'Signal Craft', 'Signal Link', 'Signal Works', 'Signal Lab', 'Signal Hub', 'Signal Forge', 'Signal Bench', 'Signal Line', 'Signal Core', 'Signal Pro', 'Signal Studio', 'Signal Stage', 'Signal Wave', 'Signal Wire', 'Signal Cable', 'Signal Signal', 'Signal Tone', 'Signal Mix', 'Signal Connect', 'Signal Audio', 'Tone Craft', 'Tone Link', 'Tone Works', 'Tone Lab', 'Tone Hub', 'Tone Forge', 'Tone Bench', 'Tone Line', 'Tone Core', 'Tone Pro', 'Tone Studio', 'Tone Stage', 'Tone Wave', 'Tone Wire', 'Tone Cable', 'Tone Signal', 'Tone Tone', 'Tone Mix', 'Tone Connect', 'Tone Audio', 'Wave Craft', 'Wave Link', 'Wave Works', 'Wave Lab', 'Wave Hub', 'Wave Forge', 'Wave Bench', 'Wave Line', 'Wave Core', 'Wave Pro', 'Wave Studio', 'Wave Stage', 'Wave Wave', 'Wave Wire', 'Wave Cable', 'Wave Signal', 'Wave Tone', 'Wave Mix', 'Wave Connect', 'Wave Audio', 'Stage Craft', 'Stage Link', 'Stage Works', 'Stage Lab', 'Stage Hub', 'Stage Forge', 'Stage Bench', 'Stage Line', 'Stage Core', 'Stage Pro', 'Stage Studio', 'Stage Stage', 'Stage Wave', 'Stage Wire', 'Stage Cable', 'Stage Signal', 'Stage Tone', 'Stage Mix', 'Stage Connect', 'Stage Audio', 'Live Craft', 'Live Link', 'Live Works', 'Live Lab', 'Live Hub', 'Live Forge', 'Live Bench', 'Live Line', 'Live Core', 'Live Pro', 'Live Studio', 'Live Stage', 'Live Wave', 'Live Wire', 'Live Cable', 'Live Signal', 'Live Tone', 'Live Mix', 'Live Connect', 'Live Audio', 'Mix Craft', 'Mix Link', 'Mix Works', 'Mix Lab', 'Mix Hub', 'Mix Forge', 'Mix Bench', 'Mix Line', 'Mix Core', 'Mix Pro', 'Mix Studio', 'Mix Stage', 'Mix Wave', 'Mix Wire', 'Mix Cable', 'Mix Signal', 'Mix Tone', 'Mix Mix', 'Mix Connect', 'Mix Audio', 'Link Craft', 'Link Link', 'Link Works', 'Link Lab', 'Link Hub', 'Link Forge', 'Link Bench', 'Link Line', 'Link Core', 'Link Pro', 'Link Studio', 'Link Stage', 'Link Wave', 'Link Wire', 'Link Cable', 'Link Signal', 'Link Tone', 'Link Mix', 'Link Connect', 'Link Audio', 'Connect Craft', 'Connect Link', 'Connect Works', 'Connect Lab', 'Connect Hub', 'Connect Forge', 'Connect Bench', 'Connect Line', 'Connect Core', 'Connect Pro', 'Connect Studio', 'Connect Stage', 'Connect Wave', 'Connect Wire', 'Connect Cable', 'Connect Signal', 'Connect Tone', 'Connect Mix', 'Connect Connect', 'Connect Audio', 'Sonic Craft', 'Sonic Link', 'Sonic Works', 'Sonic Lab', 'Sonic Hub', 'Sonic Forge', 'Sonic Bench', 'Sonic Line', 'Sonic Core', 'Sonic Pro', 'Sonic Studio', 'Sonic Stage', 'Sonic Wave', 'Sonic Wire', 'Sonic Cable', 'Sonic Signal', 'Sonic Tone', 'Sonic Mix', 'Sonic Connect', 'Sonic Audio', 'Clear Craft', 'Clear Link', 'Clear Works', 'Clear Lab', 'Clear Hub', 'Clear Forge', 'Clear Bench', 'Clear Line', 'Clear Core', 'Clear Pro', 'Clear Studio', 'Clear Stage', 'Clear Wave', 'Clear Wire', 'Clear Cable', 'Clear Signal', 'Clear Tone', 'Clear Mix', 'Clear Connect', 'Clear Audio', 'Prime Craft', 'Prime Link', 'Prime Works', 'Prime Lab', 'Prime Hub', 'Prime Forge', 'Prime Bench', 'Prime Line', 'Prime Core', 'Prime Pro', 'Prime Studio', 'Prime Stage', 'Prime Wave', 'Prime Wire', 'Prime Cable', 'Prime Signal', 'Prime Tone', 'Prime Mix', 'Prime Connect', 'Prime Audio', 'Elite Craft', 'Elite Link', 'Elite Works', 'Elite Lab', 'Elite Hub', 'Elite Forge', 'Elite Bench', 'Elite Line', 'Elite Core', 'Elite Pro', 'Elite Studio', 'Elite Stage', 'Elite Wave', 'Elite Wire', 'Elite Cable', 'Elite Signal', 'Elite Tone', 'Elite Mix', 'Elite Connect', 'Elite Audio', 'Master Craft', 'Master Link', 'Master Works', 'Master Lab', 'Master Hub', 'Master Forge', 'Master Bench', 'Master Line', 'Master Core', 'Master Pro', 'Master Studio', 'Master Stage', 'Master Wave', 'Master Wire', 'Master Cable', 'Master Signal', 'Master Tone', 'Master Mix', 'Master Connect', 'Master Audio', 'Craft Craft', 'Craft Link', 'Craft Works', 'Craft Lab', 'Craft Hub', 'Craft Forge', 'Craft Bench', 'Craft Line', 'Craft Core', 'Craft Pro', 'Craft Studio', 'Craft Stage', 'Craft Wave', 'Craft Wire', 'Craft Cable', 'Craft Signal', 'Craft Tone', 'Craft Mix', 'Craft Connect', 'Craft Audio', 'Core Craft', 'Core Link', 'Core Works', 'Core Lab', 'Core Hub', 'Core Forge', 'Core Bench', 'Core Line', 'Core Core', 'Core Pro', 'Core Studio', 'Core Stage', 'Core Wave', 'Core Wire', 'Core Cable', 'Core Signal', 'Core Tone', 'Core Mix', 'Core Connect', 'Core Audio', 'Pulse Craft', 'Pulse Link', 'Pulse Works', 'Pulse Lab', 'Pulse Hub', 'Pulse Forge', 'Pulse Bench', 'Pulse Line', 'Pulse Core', 'Pulse Pro', 'Pulse Studio', 'Pulse Stage', 'Pulse Wave', 'Pulse Wire', 'Pulse Cable', 'Pulse Signal', 'Pulse Tone', 'Pulse Mix', 'Pulse Connect', 'Pulse Audio', 'Echo Craft', 'Echo Link', 'Echo Works', 'Echo Lab', 'Echo Hub', 'Echo Forge', 'Echo Bench', 'Echo Line', 'Echo Core', 'Echo Pro', 'Echo Studio', 'Echo Stage', 'Echo Wave', 'Echo Wire', 'Echo Cable', 'Echo Signal', 'Echo Tone', 'Echo Mix', 'Echo Connect', 'Echo Audio', 'Vibe Craft', 'Vibe Link', 'Vibe Works', 'Vibe Lab', 'Vibe Hub', 'Vibe Forge', 'Vibe Bench', 'Vibe Line', 'Vibe Core', 'Vibe Pro', 'Vibe Studio', 'Vibe Stage', 'Vibe Wave', 'Vibe Wire', 'Vibe Cable', 'Vibe Signal', 'Vibe Tone', 'Vibe Mix', 'Vibe Connect', 'Vibe Audio', 'Grid Craft', 'Grid Link', 'Grid Works', 'Grid Lab', 'Grid Hub', 'Grid Forge', 'Grid Bench', 'Grid Line', 'Grid Core', 'Grid Pro', 'Grid Studio', 'Grid Stage', 'Grid Wave', 'Grid Wire', 'Grid Cable', 'Grid Signal', 'Grid Tone', 'Grid Mix', 'Grid Connect', 'Grid Audio', 'Forge Craft', 'Forge Link', 'Forge Works', 'Forge Lab', 'Forge Hub', 'Forge Forge', 'Forge Bench', 'Forge Line', 'Forge Core', 'Forge Pro', 'Forge Studio', 'Forge Stage', 'Forge Wave', 'Forge Wire', 'Forge Cable', 'Forge Signal', 'Forge Tone', 'Forge Mix', 'Forge Connect', 'Forge Audio', 'Bench Craft', 'Bench Link', 'Bench Works', 'Bench Lab', 'Bench Hub', 'Bench Forge', 'Bench Bench', 'Bench Line', 'Bench Core', 'Bench Pro', 'Bench Studio', 'Bench Stage', 'Bench Wave', 'Bench Wire', 'Bench Cable', 'Bench Signal', 'Bench Tone', 'Bench Mix', 'Bench Connect', 'Bench Audio', 'Works Craft', 'Works Link', 'Works Works', 'Works Lab', 'Works Hub', 'Works Forge', 'Works Bench', 'Works Line', 'Works Core', 'Works Pro', 'Works Studio', 'Works Stage', 'Works Wave', 'Works Wire', 'Works Cable', 'Works Signal', 'Works Tone', 'Works Mix', 'Works Connect', 'Works Audio', 'Lab Craft', 'Lab Link', 'Lab Works', 'Lab Lab', 'Lab Hub', 'Lab Forge', 'Lab Bench', 'Lab Line', 'Lab Core', 'Lab Pro', 'Lab Studio', 'Lab Stage', 'Lab Wave', 'Lab Wire', 'Lab Cable', 'Lab Signal', 'Lab Tone', 'Lab Mix', 'Lab Connect', 'Lab Audio', 'Hub Craft', 'Hub Link', 'Hub Works', 'Hub Lab', 'Hub Hub', 'Hub Forge', 'Hub Bench', 'Hub Line', 'Hub Core', 'Hub Pro', 'Hub Studio', 'Hub Stage', 'Hub Wave', 'Hub Wire', 'Hub Cable', 'Hub Signal', 'Hub Tone', 'Hub Mix', 'Hub Connect', 'Hub Audio', 'Direct Craft', 'Direct Link', 'Direct Works', 'Direct Lab', 'Direct Hub', 'Direct Forge', 'Direct Bench', 'Direct Line', 'Direct Core', 'Direct Pro', 'Direct Studio', 'Direct Stage', 'Direct Wave', 'Direct Wire', 'Direct Cable', 'Direct Signal', 'Direct Tone', 'Direct Mix', 'Direct Connect', 'Direct Audio', 'Smart Craft', 'Smart Link', 'Smart Works', 'Smart Lab', 'Smart Hub', 'Smart Forge', 'Smart Bench', 'Smart Line', 'Smart Core', 'Smart Pro', 'Smart Studio', 'Smart Stage', 'Smart Wave', 'Smart Wire', 'Smart Cable', 'Smart Signal', 'Smart Tone', 'Smart Mix', 'Smart Connect', 'Smart Audio', 'Pure Craft', 'Pure Link', 'Pure Works', 'Pure Lab', 'Pure Hub', 'Pure Forge', 'Pure Bench', 'Pure Line', 'Pure Core', 'Pure Pro', 'Pure Studio', 'Pure Stage', 'Pure Wave', 'Pure Wire', 'Pure Cable', 'Pure Signal', 'Pure Tone', 'Pure Mix', 'Pure Connect', 'Pure Audio', 'Flex Craft', 'Flex Link', 'Flex Works', 'Flex Lab', 'Flex Hub', 'Flex Forge', 'Flex Bench', 'Flex Line', 'Flex Core', 'Flex Pro', 'Flex Studio', 'Flex Stage', 'Flex Wave', 'Flex Wire', 'Flex Cable', 'Flex Signal', 'Flex Tone', 'Flex Mix', 'Flex Connect', 'Flex Audio', 'Peak Craft', 'Peak Link', 'Peak Works', 'Peak Lab', 'Peak Hub', 'Peak Forge', 'Peak Bench', 'Peak Line', 'Peak Core', 'Peak Pro', 'Peak Studio', 'Peak Stage', 'Peak Wave', 'Peak Wire', 'Peak Cable', 'Peak Signal', 'Peak Tone', 'Peak Mix', 'Peak Connect', 'Peak Audio', 'Solid Craft', 'Solid Link', 'Solid Works', 'Solid Lab', 'Solid Hub', 'Solid Forge', 'Solid Bench', 'Solid Line', 'Solid Core', 'Solid Pro', 'Solid Studio', 'Solid Stage', 'Solid Wave', 'Solid Wire', 'Solid Cable', 'Solid Signal', 'Solid Tone', 'Solid Mix', 'Solid Connect', 'Solid Audio', 'Dynamic Craft', 'Dynamic Link', 'Dynamic Works', 'Dynamic Lab', 'Dynamic Hub', 'Dynamic Forge', 'Dynamic Bench', 'Dynamic Line', 'Dynamic Core', 'Dynamic Pro', 'Dynamic Studio', 'Dynamic Stage', 'Dynamic Wave', 'Dynamic Wire', 'Dynamic Cable', 'Dynamic Signal', 'Dynamic Tone', 'Dynamic Mix', 'Dynamic Connect', 'Dynamic Audio', 'Select Craft', 'Select Link', 'Select Works', 'Select Lab', 'Select Hub', 'Select Forge', 'Select Bench', 'Select Line', 'Select Core', 'Select Pro', 'Select Studio', 'Select Stage', 'Select Wave', 'Select Wire', 'Select Cable', 'Select Signal', 'Select Tone', 'Select Mix', 'Select Connect', 'Select Audio', 'Custom Craft', 'Custom Link', 'Custom Works', 'Custom Lab', 'Custom Hub', 'Custom Forge', 'Custom Bench', 'Custom Line', 'Custom Core', 'Custom Pro', 'Custom Studio', 'Custom Stage', 'Custom Wave', 'Custom Wire', 'Custom Cable', 'Custom Signal', 'Custom Tone', 'Custom Mix', 'Custom Connect', 'Custom Audio', 'Tech Craft', 'Tech Link', 'Tech Works', 'Tech Lab', 'Tech Hub', 'Tech Forge', 'Tech Bench', 'Tech Line', 'Tech Core', 'Tech Pro', 'Tech Studio', 'Tech Stage', 'Tech Wave', 'Tech Wire', 'Tech Cable', 'Tech Signal', 'Tech Tone', 'Tech Mix', 'Tech Connect', 'Tech Audio', 'Digital Craft', 'Digital Link', 'Digital Works', 'Digital Lab', 'Digital Hub', 'Digital Forge', 'Digital Bench', 'Digital Line', 'Digital Core', 'Digital Pro', 'Digital Studio', 'Digital Stage', 'Digital Wave', 'Digital Wire', 'Digital Cable', 'Digital Signal', 'Digital Tone', 'Digital Mix', 'Digital Connect', 'Digital Audio', 'Analog Craft', 'Analog Link', 'Analog Works', 'Analog Lab', 'Analog Hub', 'Analog Forge', 'Analog Bench', 'Analog Line', 'Analog Core', 'Analog Pro', 'Analog Studio', 'Analog Stage', 'Analog Wave', 'Analog Wire', 'Analog Cable', 'Analog Signal', 'Analog Tone', 'Analog Mix', 'Analog Connect', 'Analog Audio', 'Power Craft', 'Power Link', 'Power Works', 'Power Lab', 'Power Hub', 'Power Forge', 'Power Bench', 'Power Line', 'Power Core', 'Power Pro', 'Power Studio', 'Power Stage', 'Power Wave', 'Power Wire', 'Power Cable', 'Power Signal', 'Power Tone', 'Power Mix', 'Power Connect', 'Power Audio', 'Ultra Craft', 'Ultra Link', 'Ultra Works', 'Ultra Lab', 'Ultra Hub', 'Ultra Forge', 'Ultra Bench', 'Ultra Line', 'Ultra Core', 'Ultra Pro', 'Ultra Studio', 'Ultra Stage', 'Ultra Wave', 'Ultra Wire', 'Ultra Cable', 'Ultra Signal', 'Ultra Tone', 'Ultra Mix', 'Ultra Connect', 'Ultra Audio', 'Max Craft', 'Max Link', 'Max Works', 'Max Lab', 'Max Hub', 'Max Forge', 'Max Bench', 'Max Line', 'Max Core', 'Max Pro', 'Max Studio', 'Max Stage', 'Max Wave', 'Max Wire', 'Max Cable', 'Max Signal', 'Max Tone', 'Max Mix', 'Max Connect', 'Max Audio', 'Nova Craft', 'Nova Link', 'Nova Works', 'Nova Lab', 'Nova Hub', 'Nova Forge', 'Nova Bench', 'Nova Line', 'Nova Core', 'Nova Pro', 'Nova Studio', 'Nova Stage', 'Nova Wave', 'Nova Wire', 'Nova Cable', 'Nova Signal', 'Nova Tone', 'Nova Mix', 'Nova Connect', 'Nova Audio', 'Vertex Craft', 'Vertex Link', 'Vertex Works', 'Vertex Lab', 'Vertex Hub', 'Vertex Forge', 'Vertex Bench', 'Vertex Line', 'Vertex Core', 'Vertex Pro', 'Vertex Studio', 'Vertex Stage', 'Vertex Wave', 'Vertex Wire', 'Vertex Cable', 'Vertex Signal', 'Vertex Tone', 'Vertex Mix', 'Vertex Connect', 'Vertex Audio', 'Apex Craft', 'Apex Link', 'Apex Works', 'Apex Lab', 'Apex Hub', 'Apex Forge', 'Apex Bench', 'Apex Line', 'Apex Core', 'Apex Pro', 'Apex Studio', 'Apex Stage', 'Apex Wave', 'Apex Wire', 'Apex Cable', 'Apex Signal', 'Apex Tone', 'Apex Mix', 'Apex Connect', 'Apex Audio', 'Fusion Craft', 'Fusion Link', 'Fusion Works', 'Fusion Lab', 'Fusion Hub', 'Fusion Forge', 'Fusion Bench', 'Fusion Line', 'Fusion Core', 'Fusion Pro', 'Fusion Studio', 'Fusion Stage', 'Fusion Wave', 'Fusion Wire', 'Fusion Cable', 'Fusion Signal', 'Fusion Tone', 'Fusion Mix', 'Fusion Connect', 'Fusion Audio', 'Spectrum Craft', 'Spectrum Link', 'Spectrum Works', 'Spectrum Lab', 'Spectrum Hub', 'Spectrum Forge', 'Spectrum Bench', 'Spectrum Line', 'Spectrum Core', 'Spectrum Pro', 'Spectrum Studio', 'Spectrum Stage', 'Spectrum Wave', 'Spectrum Wire', 'Spectrum Cable', 'Spectrum Signal', 'Spectrum Tone', 'Spectrum Mix', 'Spectrum Connect', 'Spectrum Audio'];
+  const generated = generatedNames[Math.floor(Math.random() * generatedNames.length)];
+
+  document.title = generated;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    // Generated customer number: CUS-0001, CUS-0002, ...
+    let n = parseInt(localStorage.getItem('customerSequence') || '0', 10);
+    n += 1;
+    localStorage.setItem('customerSequence', String(n));
+    const customerNo = 'CUS-' + String(n).padStart(4, '0');
+
+    const customer = document.querySelector(
+      '#customer, input[name="customer"], #cus, input[name="cus"]'
+    );
+    if (customer) {
+      customer.value = customerNo;
+      customer.disabled = true;
+      customer.readOnly = true;
+    }
+
+    // Generated app name; no POS/V5.3 wording.
+    document.querySelectorAll('header, header h1, header .title, header strong').forEach(function(el){
+      if (el.textContent.includes('Audio Cable')) {
+        el.innerHTML = el.innerHTML.replace(/Audio Cable(?: POS)?(?: v5\.3)?/g, generated);
+      }
+    });
+  });
+})();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const customer = document.querySelector(
+    '#customer, input[name="customer"], #cus, input[name="cus"]'
+  );
+  if (customer) {
+    customer.disabled = true;
+    customer.readOnly = true;
+    customer.style.cursor = 'not-allowed';
+    customer.style.opacity = '0.75';
+  }
+});
+</script>
+
+
+<script>
+(function(){
+  function lockCustomer(){
+    var el = document.querySelector('#customer, input[name="customer"], #cus, input[name="cus"]');
+    if(el){
+      el.disabled = true;
+      el.readOnly = true;
+      el.setAttribute('disabled','disabled');
+      el.setAttribute('readonly','readonly');
+      el.style.cursor = 'not-allowed';
+      el.style.opacity = '0.75';
+      el.style.backgroundColor = '#f3f4f6';
+      el.onkeydown = function(e){ e.preventDefault(); };
+      el.onkeypress = function(e){ e.preventDefault(); };
+      el.onpaste = function(e){ e.preventDefault(); };
+      el.oninput = function(){ lockCustomer(); };
+    }
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', lockCustomer);
+  } else {
+    lockCustomer();
+  }
+})();
+</script>
+
+
+
+
+
+<script>
+(function(){
+  function setupCustomerName(){
+    const el = document.getElementById('cust');
+    const btn = document.getElementById('enableCustomerName');
+    const status = document.getElementById('customerNameStatus');
+    if(!el || !btn) return;
+
+    el.disabled = true;
+    el.readOnly = true;
+
+    btn.addEventListener('click', function(){
+      el.disabled = false;
+      el.readOnly = false;
+      el.removeAttribute('disabled');
+      el.removeAttribute('readonly');
+      el.style.cursor = 'text';
+      el.style.opacity = '1';
+      el.style.backgroundColor = '';
+      status.textContent = 'Custom name enabled';
+      status.style.color = '#166534';
+      btn.textContent = 'Customer Name Entry Enabled';
+      btn.disabled = true;
+      el.focus();
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', setupCustomerName);
+  } else {
+    setupCustomerName();
+  }
+})();
+</script>
+
+</body>
+</html>
